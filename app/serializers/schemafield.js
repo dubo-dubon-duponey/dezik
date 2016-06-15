@@ -30,7 +30,8 @@ var Serializer = JSONAPISerializer.extend({
       _extra: {
         'com.spacedog.tsygan::id': json.data.id,
         'com.spacedog.tsygan::parent': json.data.relationships.parent_model.data.id,
-        'com.spacedog.tsygan::default': json.data.attributes.default_value
+        'com.spacedog.tsygan::default': json.data.attributes.default_value,
+        'com.spacedog.tsygan::enum': json.data.attributes.enum_set
       }
     };
     // XXX SpaceDog is very picky on arguments that can be there and when
@@ -80,7 +81,8 @@ var Serializer = JSONAPISerializer.extend({
         required: hash._required,
         language: hash._language,
         array: hash._array,
-        default_value: hash._extra['com.spacedog.tsygan::default']
+        default_value: hash._extra['com.spacedog.tsygan::default'],
+        enum_set: hash._extra['com.spacedog.tsygan::enum']
       },
       relationships: {
         parent_model: {

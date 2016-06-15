@@ -19,7 +19,8 @@ export default Model.extend({
   array:            attr('boolean', {defaultValue: false}),
   // In case the field type is a string, what language is that (see transforms)
   language:         attr('language', {defaultValue: 'English'}),
-  // jsonPropertyName: attr('string'),
+  // Useful
+  enumSet:         attr('enum'),
 
   // XXX relate to references
   relatedTo:        attr('string', {defaultValue: null}),
@@ -36,6 +37,19 @@ export default Model.extend({
   hasLanguage:         computed('type', function(){
     const currentType = this.get('type');
     return (currentType === 'string');
+  }),
+  hasEnum:         computed('type', function(){
+    const currentType = this.get('type');
+    return (currentType === 'enum');
+  }),
+
+  fieldEnumSet: computed('enumSet', {
+    get(key) {
+      return (this.get('enumSet') || []).join(',');
+    },
+    set(key, value) {
+      return this.set('enumSet', value.split(','));
+    }
   })
 
   /*, XXX non functional shit

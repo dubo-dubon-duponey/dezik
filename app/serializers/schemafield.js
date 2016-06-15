@@ -44,6 +44,15 @@ var Serializer = JSONAPISerializer.extend({
     return output;
   },
 
+  normalizeDeleteRecordResponse: function (store, primaryModelClass, payload, id, requestType){
+    console.warn('com.spacedog.tsygan::schemaField->normalizeDeleteRecordResponse', payload);
+    payload.data = {
+      id: id,
+      type: primaryModelClass.toString().match(/([^:]+):$/).pop()
+    };
+    return this._super(...arguments);
+  },
+
   /*normalizeResponse: function(store, primaryModelClass, payload, id, requestType){
     console.warn('com.spacedog.tsygan::schemaField->normalizeResponse', payload);
     var json = this._super(...arguments);
@@ -53,6 +62,14 @@ var Serializer = JSONAPISerializer.extend({
   normalize: function(modelClass, resourceHash) {
     console.warn('com.spacedog.tsygan::schemaField->normalize', resourceHash);
     var fieldName = Object.keys(resourceHash).shift();
+
+    // Catch delete here :/ super lame
+    if(fieldName == 'id')
+      return this._super(modelClass, {
+        id: resourceHash.id,
+        type: resourceHash.type
+      });
+
     var hash = resourceHash[fieldName];
     var json = {
       id: hash._extra['com.spacedog.tsygan::id'],

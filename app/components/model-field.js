@@ -25,7 +25,6 @@ export default Component.extend({
         }
       });
 
-      console.warn("****", field, parentModel.get('id'));
       this.sendAction('update', parentModel.get('id'));
     }
   }

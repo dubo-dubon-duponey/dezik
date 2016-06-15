@@ -1,0 +1,50 @@
+<div class='col-sm-2'>
+    <span class="label label-info">Name</span>
+  {{input type='text' value=field.name placeholder='Attribute Name' class='form-control'}}
+</div>
+
+<div class='col-sm-2'>
+    <span class="label label-info">Type</span>
+  {{#x-select value=field.type class='form-control' prompt='Attribute Type'}}
+    {{#each typeOptions as |option|}}
+      {{#x-option value=option}}{{option}}{{/x-option}}
+    {{/each}}
+  {{/x-select}}
+</div>
+
+{{#if field.hasArray}}
+    <div class='col-sm-1'>
+        <span class="label label-info">Array</span><br />{{input type="checkbox" name="array" checked=field.array}}
+    </div>
+{{/if}}
+
+<div class='col-sm-1'>
+    <span class="label label-info">Required</span><br />{{input type="checkbox" name="required" checked=field.required}}
+</div>
+
+{{#if field.required}}
+    <div class='col-sm-2'>
+        <span class="label label-info">Default</span>{{input type='text' value=field.defaultValue placeholder='Default value' class='form-control'}}
+  </div>
+{{/if}}
+
+<div class='col-sm-2'>
+  {{#if field.hasLanguage}}
+      <span class="label label-info">Lang</span>
+    {{#x-select value=field.language class='form-control' prompt='Language'}}
+      {{#each languageOptions as |option|}}
+        {{#x-option value=option}}{{option}}{{/x-option}}
+      {{/each}}
+    {{/x-select}}
+  {{/if}}
+</div>
+
+{{#if field.hasRelation}}
+  <div class='col-sm-4'>
+    {{input type='text' value=field.relatedTo placeholder='Model Name' class='form-control'}}
+  </div>
+{{/if}}
+
+<div class=":col-sm-1 {{unless field.hasRelation 'col-sm-offset-4'}}">
+  <button type='button' {{action 'removeField' field}} class='close'><span aria-hidden='true' class='text-danger'>&times;</span><span class='sr-only'>Delete</span></button>
+</div>

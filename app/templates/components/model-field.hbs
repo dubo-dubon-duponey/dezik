@@ -22,6 +22,12 @@
     <span class="label label-info">Required</span><br />{{input type="checkbox" name="required" checked=field.required}}
 </div>
 
+{{#if field.hasEnum}}
+    <div class='col-sm-2'>
+        <span class="label label-info">Enum values</span>{{input type='text' value=field.fieldEnumSet placeholder='Enum values' class='form-control'}}
+    </div>
+{{/if}}
+
 {{#if field.required}}
     <div class='col-sm-2'>
         <span class="label label-info">Default</span>{{input type='text' value=field.defaultValue placeholder='Default value' class='form-control'}}

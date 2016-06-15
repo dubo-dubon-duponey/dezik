@@ -10,7 +10,7 @@ export default DS.Adapter.extend({
   deleteRecord: function(){
     console.warn('com.spacedog.tsygan::schemaField->deleteRecord');
     return new Ember.RSVP.Promise(function (resolve/*, reject*/) {
-      Ember.run(null, resolve, {data: {}});
+      return Ember.run(null, resolve, {status: 200});
     });
   }
 });

@@ -1,8 +1,7 @@
-import Ember from 'ember';
-import DS from 'ember-data';
-
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
 const { computed } = Ember;
-const { Model, belongsTo, attr } = DS;
+import { belongsTo } from 'ember-data/relationships';
 
 export default Model.extend({
   // Name of the field
@@ -32,7 +31,7 @@ export default Model.extend({
   // Computed properties to help templates decide what to display
   hasArray:         computed('type', function(){
     const currentType = this.get('type');
-    return (currentType !== 'json');
+    return (['json', 'belongsTo', 'hasMany'].indexOf(currentType) === -1);
   }),
   hasLanguage:         computed('type', function(){
     const currentType = this.get('type');
@@ -44,7 +43,7 @@ export default Model.extend({
   }),
 
   fieldEnumSet: computed('enumSet', {
-    get(key) {
+    get(/*key*/) {
       return (this.get('enumSet') || []).join(',');
     },
     set(key, value) {
@@ -53,19 +52,19 @@ export default Model.extend({
   })
 
   /*, XXX non functional shit
-  defaultJSON:        computed('defaultValue', {
-    get(key) {
-      return JSON.stringify(this.get('defaultValue'));
-    },
-    set(key, value) {
-      try{
-        value = JSON.parse(value.toString());
-      }catch(e){
-        console.warn('Fail to parse', value, '. Will use it as a string');
-      }
-      console.warn('Setting to', value);
-      return this.set('defaultValue', value);
-    }
-  })*/
+   defaultJSON:        computed('defaultValue', {
+   get(key) {
+   return JSON.stringify(this.get('defaultValue'));
+   },
+   set(key, value) {
+   try{
+   value = JSON.parse(value.toString());
+   }catch(e){
+   console.warn('Fail to parse', value, '. Will use it as a string');
+   }
+   console.warn('Setting to', value);
+   return this.set('defaultValue', value);
+   }
+   })*/
 });
 

@@ -4,7 +4,7 @@ module.exports = function(environment) {
   var ENV = {
     modulePrefix: 'dezik',
     environment: environment,
-    baseURL: '/dezik/',
+    baseURL: '/',
     locationType: 'auto',
     EmberENV: {
       FEATURES: {
@@ -14,9 +14,6 @@ module.exports = function(environment) {
     },
 
     APP: {
-      SPACEDOG_DOMAIN: 'dezik',// 'farcloser', //
-      SPACEDOG_USER: 'dmp',
-      SPACEDOG_PWD: 'v4whZw4XZBUBpA' // 'kZdFqJs2jfY6qG', //
       // Here you can pass flags/options to your application instance
       // when it is created
     }
@@ -43,10 +40,8 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
+
   }
 
   return ENV;
 };
-
-
-

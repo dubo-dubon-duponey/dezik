@@ -10,6 +10,7 @@ Router.map(function() {
   this.route('data', { path: '/data/:data_schema' });
   this.route('index', {path: '/'});
   this.route('audit');
+  this.route('share');
 });
 
 export default Router;

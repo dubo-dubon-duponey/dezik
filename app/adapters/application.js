@@ -26,20 +26,13 @@ var route = function(options){
             data.push(key + '=' + options.data[key]);
           });
           data = data.join('&');
-/*          if(options.data.size !== undefined)
-            data += 'size=' + options.data.limit;
-          if(options.data.from !== undefined)
-            data += '&from=' + options.data.offset;*/
-/*
-          if(options.data.filter !== undefined){
-            options.data.filter.logType
-          }
-*/
-          // logType –– Optional. Valid values are [KEY, USER, OPERATOR, ADMIN, SUPER_ADMIN, SUPERDOG]. Returns logs with the specified credentials level or lower.
-          // minStatus –– Returns logs with the specified http response status code or higher.
           delete options.data;
           options.url = options.url.replace(/spacedog-.*/, 'log');
           options.url += '?' + data;
+          break;
+        case 'shares':
+        case 'share':
+          options.url = options.url.replace(/spacedog-.*/, 'share');
           break;
       }
       break;

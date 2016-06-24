@@ -6,22 +6,54 @@
   var POST    = 'POST';
   var DELETE  = 'DELETE';
 
+  var getNormalizer = function(endpoint, method){
+    // Get the processor
+    var root = endpoint.split('/').shift();
+    var meth = method.toLowerCase();
+    var processor = SpaceDog.normalize;
+    if(root in processor){
+      processor = processor[root];
+      if(meth in processor)
+        processor = processor[meth];
+    }
+    return processor;
+  };
+
+  var getSerializer = function(endpoint, method){
+    // Get the processor
+    var root = endpoint.split('/').shift();
+    var meth = method.toLowerCase();
+    var processor = SpaceDog.serialize;
+    if(root in processor){
+      processor = processor[root];
+      if(meth in processor)
+        processor = processor[meth];
+    }
+    return processor;
+  };
+
+
   // Dead silly XHR wrapper
   var X = function(app, success, failure, endpoint, method, data, headers) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function(event) {
       if(this.readyState != 4)
         return;
+
       var resp = {
         responseText: this.responseText,
         error: 'Not JSON parsable!'
       };
+      var process = getNormalizer(endpoint, method);
       try {
-        resp = JSON.parse(this.responseText);
+        resp = process(this.status, this.responseText, this.getAllResponseHeaders());
+//        resp = JSON.parse(this.responseText);
         if (this.status < 200 || this.status >= 400)
           throw new Error('Backend error');
+
         success(this.status, resp, this.getAllResponseHeaders());
       }catch(e){
+        console.warn('Failed! Input was:', this.responseText);
         failure(this.status, resp, this.getAllResponseHeaders(), xhr);
       }
     };
@@ -36,127 +68,11 @@
     // Do we have a file by any chance?
     if (data && (typeof data == 'string') && (data.substr(0, 5) == 'data:'))
       data = dataURItoBlob(data);
-    if(data && (typeof data == 'object'))
-      data = JSON.stringify(data);
-    xhr.send(data);
-  };
-
-  var typeMapping = {
-    'text': 'string', // *
-    'timestamp': 'date', //  *
-    'boolean': 'boolean', // *
-    'float': 'number', // *
-    'integer': 'integer', // +
-    'string': 'identifier',
-    'stash': 'json',
-    // 'ref': 'reference',
-    'geopoint': 'geocoordinates',
-    'enum': 'enum'/*,
-    'file': 'file',
-    'amount': 'amount'*/
-  };
-
-  // This is Elastic Search actual list of supported languages
-  var sourceLn = {
-    "ar": "Arabic",
-    "hy": "Armenian",
-    "eu": "Basque",
-    "pt": "Brazilian",
-    "bg": "Bulgarian",
-    "ca": "Catalan",
-    "ja": "Cjk",
-    "zh": "Cjk",
-    "ko": "Cjk",
-    "cs": "Czech",
-    "da": "Danish",
-    "nl": "Dutch",
-    "en": "English",
-    "fi": "Finnish",
-    "fr": "French",
-    "gl": "Galician",
-    "de": "German",
-    "el": "Greek",
-    "hi": "Hindi",
-    "hu": "Hungarian",
-    "id": "Indonesian",
-    "ga": "Irish",
-    "it": "Italian",
-    "lv": "Latvian",
-    "lt": "Lithuanian",
-    "no": "Norwegian",
-    "fa": "Persian",
-    "pt": "Portuguese",
-    "ro": "Romanian",
-    "ru": "Russian",
-    "ku": "Sorani",
-    "es": "Spanish",
-    "sv": "Swedish",
-    "tr": "Turkish",
-    "th": "Thai"
-  };
-
-  // Flat it
-  var belln = {};
-  var lnoptions = [];
-  Object.keys(sourceLn).forEach(function(key){
-    belln[sourceLn[key].toLowerCase()] = sourceLn[key];
-    lnoptions.push(sourceLn[key]);
-  });
-
-  var lnLup = Mingus.grammar.iso639.fork(belln);
-
-    // Pre-existing: string number boolean date
-  var transforms = {
-    type: {
-      deserialize: function(serialized){
-        if(serialized in typeMapping)
-          return typeMapping[serialized];
-        throw new Error('Unnhandled spacedog service field type');
-      },
-      serialize: function(deserialized){
-        var ret;
-        Object.keys(typeMapping).forEach(function(key){
-          if (deserialized == typeMapping[key])
-            ret = key;
-        });
-        if (!ret)
-          throw new Error('Unnhandled locally defined field type');
-        return ret;
-      },
-      dump: function(){
-        return Object.keys(typeMapping).map(function(key) {
-          return typeMapping[key];
-        });
-      }
-    },
-    integer: {
-      deserialize: function(serialized) {
-        return parseInt(serialized, 10);
-      },
-
-      serialize: function(deserialized) {
-        return deserialized;
-      }
-    },
-    language: {
-      deserialize: function(serialized) {
-        if(!serialized)
-          return '';// 'English';
-        var ret = lnLup.decode(serialized);
-        if(!ret)
-          throw new Error('Unsupported dog language stored on backend!');
-        return ret;
-      },
-
-      serialize: function(deserialized) {
-        if(!deserialized)
-          return '';// 'english';
-        var ret = lnLup.encode(deserialized);
-        if(!ret)
-          throw new Error('Unsupported dog language specified! Can\'t save this: ' + deserialized);
-        return ret;
-      }
+    if(data && (typeof data == 'object')){
+      var process = getSerializer(endpoint, method);
+      data = JSON.stringify(process(data));
     }
+    xhr.send(data);
   };
 
   var SpaceDogEngine = function(domain, user, pwd){
@@ -167,12 +83,8 @@
     };
   };
 
-  SpaceDogEngine.transforms = transforms;
-
-  SpaceDogEngine.uuid = Mingus.grammar.uuid.generate;
-
-  SpaceDogEngine.languageOptions = lnoptions;
-
   this.SpaceDogEngine = SpaceDogEngine;
 
 }).apply(this);
+
+

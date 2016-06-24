@@ -1,0 +1,23 @@
+<h3>Log auditor</h3>
+<div class="container-inner">
+  {{outlet}}
+  {{#data-table data=model query="query"}}
+      <table class="table table-striped" cellspacing="0" width="100%">
+          <thead>
+          <tr>
+              <th>Method</th>
+              <th>Path</th>
+              <th>Received at</th>
+              <th>Processed in</th>
+              <th>Status</th>
+              <th>Request body</th>
+              <th>Response body</th>
+          </tr>
+          </thead>
+          <tbody>
+          </tbody>
+      </table>
+
+  {{/data-table}}
+
+</div>

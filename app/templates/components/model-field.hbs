@@ -1,56 +1,59 @@
 <div class='col-sm-2'>
     <span class="label label-info">Name</span>
-  {{input type='text' value=field.name placeholder='Attribute Name' class='form-control'}}
+  {{input type='text' value=field.name disabled=(if field.dirty "" "disabled") placeholder='Attribute Name' class='form-control'}}
 </div>
 
 <div class='col-sm-2'>
     <span class="label label-info">Type</span>
-  {{#x-select value=field.type class='form-control' prompt='Attribute Type'}}
+  {{#x-select value=field.type disabled=(if field.dirty "" "disabled") class='form-control' prompt='Attribute Type'}}
     {{#each typeOptions as |option|}}
       {{#x-option value=option}}{{option}}{{/x-option}}
     {{/each}}
   {{/x-select}}
 </div>
 
-{{#if field.hasArray}}
-    <div class='col-sm-1'>
-        <span class="label label-info">Array</span><br />{{input type="checkbox" name="array" checked=field.array}}
-    </div>
-{{/if}}
-
-<div class='col-sm-1'>
-    <span class="label label-info">Required</span><br />{{input type="checkbox" name="required" checked=field.required}}
-</div>
-
-{{#if field.hasEnum}}
-    <div class='col-sm-2'>
-        <span class="label label-info">Enum values</span>{{input type='text' value=field.fieldEnumSet placeholder='Enum values' class='form-control'}}
-    </div>
-{{/if}}
-
-{{#if field.required}}
-    <div class='col-sm-2'>
-        <span class="label label-info">Default</span>{{input type='text' value=field.defaultValue placeholder='Default value' class='form-control'}}
-  </div>
-{{/if}}
-
 <div class='col-sm-2'>
   {{#if field.hasLanguage}}
       <span class="label label-info">Lang</span>
-    {{#x-select value=field.language class='form-control' prompt='Language'}}
+    {{#x-select value=field.language disabled=(if field.dirty "" "disabled") class='form-control' prompt='Language'}}
       {{#each languageOptions as |option|}}
         {{#x-option value=option}}{{option}}{{/x-option}}
       {{/each}}
     {{/x-select}}
   {{/if}}
+  {{#if field.hasRelation}}
+      <!--
+  {{input type='text' value=field.relatedTo placeholder='Model Name' class='form-control'}}
+-->
+
+      <span class="label label-info">Linked-type</span>
+    {{#x-select value=field.relatedTo class='form-control' prompt='Relation'}}
+      {{#each modelList as |option|}}
+        {{#x-option value=option}}{{option}}{{/x-option}}
+      {{/each}}
+    {{/x-select}}
+  {{/if}}
+
+  {{#if field.hasEnum}}
+      <span class="label label-info">Enum values</span>{{input type='text' value=field.fieldEnumSet placeholder='Enum values' class='form-control'}}
+  {{/if}}
 </div>
 
-{{#if field.hasRelation}}
-  <div class='col-sm-4'>
-    {{input type='text' value=field.relatedTo placeholder='Model Name' class='form-control'}}
-  </div>
-{{/if}}
+
+<div class='col-sm-1'>
+    <span class={{if field.hasArray "label label-info" "label label-default"}}>Array</span><br />{{input disabled=(if field.hasArray "" "disabled") type="checkbox" name="array" checked=(if field.hasArray field.array "")}}
+</div>
+
+<div class='col-sm-1'>
+    <span class="label label-info">Required</span><br />{{input type="checkbox" name="required" checked=field.required}}
+</div>
+
+<div class='col-sm-2'>
+    <span class={{if field.required "label label-info" "label label-default"}}>Default</span>{{input type='text' disabled=(if field.required "" "disabled") value=(if field.required field.defaultValue '') placeholder='Default value' class='form-control'}}
+</div>
 
 <div class=":col-sm-1 {{unless field.hasRelation 'col-sm-offset-4'}}">
-  <button type='button' {{action 'removeField' field}} class='close'><span aria-hidden='true' class='text-danger'>&times;</span><span class='sr-only'>Delete</span></button>
+  {{#if field.dirty}}
+      <button type='button' {{action 'removeField' field}} class='btn btn-xs btn-danger pull-right'><span>Delete</span></button>
+  {{/if}}
 </div>

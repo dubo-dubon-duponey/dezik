@@ -2,25 +2,13 @@ import Ember from 'ember';
 
 const { Component, observer } = Ember;
 
-var interval;
-
-var setInter = function(cbk){
-  // If there was something already, cancel and reset
-  if (interval)
-    clearTimeout(interval);
-  interval = setTimeout(cbk, 1000);
-};
-
-
 export default Component.extend({
-  typeOptions: SpaceDogEngine.transforms.type.dump(),
-  languageOptions: SpaceDogEngine.languageOptions,
+  typeOptions: SpaceDog.transforms.type.dump(),
+  languageOptions: SpaceDog.transforms.language.dump(),
+  modelList: null,
   field: null,
   changeObserver: observer('field.name', 'field.type', 'field.array', 'field.language', 'field.required', 'field.defaultValue', 'field.enumSet', 'field.relatedTo', function () {
-    // Schedule an update dispatch
-    setInter(function(){
-      this.sendAction('update', this.get('field.parentModel.id'));
-    }.bind(this));
+    this.sendAction('update', this.get('field.parentModel.id'));
   }),
 
   actions: {

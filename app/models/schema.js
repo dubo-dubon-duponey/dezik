@@ -1,9 +1,11 @@
-import DS from 'ember-data';
+import Model from 'ember-data/model';
+// import attr from 'ember-data/attr';
+import { hasMany } from 'ember-data/relationships';
 
-const { Model, hasMany } = DS;
-
-// A schema is very simply something that has many fields
-// Note that id does not have to be defined (ember-implicit)
 export default Model.extend({
   fields: hasMany('schemafield')
 });
+
+
+
+// XXX Schema name (id) must not contain \\,/, *, ?, \", <, >, |,  , ,

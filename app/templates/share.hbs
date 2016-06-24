@@ -1,0 +1,27 @@
+<h3>Shares</h3>
+<div class="container-inner">
+  {{outlet}}
+  {{#data-table-share data=model}}
+          <thead>
+          <tr>
+              <th>Filename</th>
+              <th>Last modified</th>
+              <th>Content-type</th>
+              <th>ETAG</th>
+              <th>Size</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each model as |file|}}
+            <tr>
+                <td><a href="{{file.path}}">{{file.filename}}</a></td>
+                <td>{{moment file.lastModified}}</td>
+                <td>{{file.contentType}}</td>
+                <td>{{file.etag}}</td>
+                <td>{{file.size}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+  {{/data-table-share}}
+
+</div>

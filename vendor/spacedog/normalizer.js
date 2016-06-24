@@ -40,6 +40,45 @@
       return output;
     };
 
+    root.share = function(status, text){
+      console.debug('com.spacedog.tsygan::normalizer->root <<>>', text);
+      return JSON.parse(text);
+    };
+
+    root.share.get = function(status, payload, headers, options){
+      console.debug('com.spacedog.tsygan::normalizer->root::share <<', payload);
+      payload = JSON.parse(payload);
+      var output = {
+        data: [],
+        meta: {
+          took: payload.took,
+          total: payload.total
+        }
+      };
+      payload.results.forEach(function(item){
+        Object.keys(item).forEach(function(key){
+          var newKey = key.dasherize();
+          if(newKey != key){
+            item[newKey] = item[key];
+            delete item[key];
+          }
+        });
+        // {"path":"/8f703078-0cc5-43b9-ad01-4b4db99bbcaa/flouf","size":12,"lastModified":"2016-06-24T01:01:55.000Z","etag":"e3c2564e6685ef1f3d37d52a9ad8b4a7"}]}
+        item.filename = item.path.split('/').pop();
+        output.data.push({
+          // XXX remap identifiers here
+          id: item.path.split('/')[1],
+          type: 'SpacedogShare',
+          attributes: item,
+          relationships: {}
+        });
+        // XXX brutal pascal
+        item.path = options.url + item.path;
+      });
+      console.debug('com.spacedog.tsygan::normalizer->root::log >>', output);
+      return output;
+    };
+
     root.schema = function(status, text){
       console.debug('com.spacedog.tsygan::normalizer->root::schema <<>>', text);
       return JSON.parse(text);

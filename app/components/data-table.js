@@ -50,7 +50,9 @@ export default Ember.Component.extend({
         { name: "Processing time", data: "processedIn", type: "num" },
         { name: "Status", data: "status", type: "num" },
         { name: "Request body", data: "jsonContent", render: popover },
-        { name: "Response", data: "response", render: popover}
+        { name: "Response", data: "response", render: popover},
+        { name: "Name", data: "credentials.name"},
+        { name: "Type", data: "credentials.type"},
       ],
       ajax: function (options, callback/*, settings*/) {
         this.sendAction('query', options, function(data, errorTitle, errorMessage) {

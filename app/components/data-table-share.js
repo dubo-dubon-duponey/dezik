@@ -7,6 +7,7 @@ export default Component.extend({
   _tabler: '',
   init: function(){
     this._super(...arguments);
+    this.set('_hook', this);
   },
   initDataTable: function() {
     $.fn.dataTable.ext.errMode = 'none';
@@ -32,7 +33,6 @@ export default Component.extend({
       ]*/
 //      data: model
     }));
-    this.set('_hook', this);
   }.on('didInsertElement'),
 
   // XXX HERE BE SO MANY TERRIBLE TERRIBLE THINGS

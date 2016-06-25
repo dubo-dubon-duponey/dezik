@@ -44,6 +44,7 @@ export default Ember.Component.extend({
         { name: "Method", data: "method" },
         { name: "Path", data: "path" },
         { name: "Received at", data: "receivedAt", type: "date", render: function(data){
+          // XXX FIXME ordering won't work on this obviously
           return '<span title="' + moment(data).format('MMMM Do YYYY, h:mm:ss a') + '">' + moment(data).fromNow() + '</span>';
         } },
 

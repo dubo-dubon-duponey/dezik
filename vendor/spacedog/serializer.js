@@ -9,6 +9,17 @@
     return jsonAPIData;
   };
 
+  serializer.share = function(jsonAPIData) {
+    console.debug('com.spacedog.tsygan::serializer->root::share <<>>');
+    return jsonAPIData;
+  };
+
+  // How to serialize Schemas
+  /*serializer.share.put = function(jsonAPIData) {
+    console.debug('com.spacedog.tsygan::serializer->root::share::put <<>>');
+    return jsonAPIData;
+  };*/
+
   // How to serialize Schemas
   serializer.schema = function(jsonAPIData) {
     console.debug('com.spacedog.tsygan::serializer->root::schema <<>>', jsonAPIData);

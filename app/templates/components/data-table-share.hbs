@@ -1,1 +1,33 @@
+<thead>
+<tr>
+    <th>itemname</th>
+    <th>Last modified</th>
+    <th style="display:none;">Content-type</th>
+    <th style="display: none;">ETAG</th>
+    <th>Size</th>
+    <th></th>
+</tr>
+</thead>
+<tbody>
+{{#each model as |item|}}
+    <tr id="share-id-{{item.id}}">
+      {{#if item.id}}
+          <td><a href="{{item.path}}">{{item.filename}}</a></td>
+      {{/if}}
+      {{#unless item.id}}
+          <td class="icon icon-arrow-up">{{item.filename}}</td>
+      {{/unless}}
+        <td data-order={{moment item.lastModified 'valueOf'}}>{{moment item.lastModified}}</td>
+        <td style="display: none;">{{item.contentType}}</td>
+        <td style="display: none;">{{item.etag}}</td>
+        <td>{{item.size}}</td>
+        <td>
+          {{#if item.id}}
+            {{#bs-button size="small" type="danger" action=(action "deleteRow" item)}}Delete{{/bs-button}}
+          {{/if}}
+        </td>
+    </tr>
+{{/each}}
+</tbody>
+
 {{yield}}

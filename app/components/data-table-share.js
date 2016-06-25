@@ -1,39 +1,19 @@
 import Ember from 'ember';
-import Model from 'ember-data/model';
-import attr from 'ember-data/attr';
+const { Component } = Ember;
 
-var x = 0;
-
-var popover = function ( data, type, full, meta ) {
-  if(!data)
-    return '';
-  // XXX Pretty terrible
-  setTimeout(function(idx){
-    $(idx).popover({
-      animation: true,
-      title: "Body",
-      html: true,
-      content: JSON.htmlPrint(data, 2),
-      placement: "left",
-      template: '<div class="popover" style="max-width: 800px" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div><pre class="popover-content"></pre></div></div>',
-      trigger: "focus"
-    });
-  }, 100, '#popover-response-' + x);
-  var node = '<a id="popover-response-' + x + '" tabindex="0" class="btn btn-xs btn-info" role="button">Show</a>';
-  x++;
-  return node;
-};
-
-export default Ember.Component.extend({
+export default Component.extend({
   tagName: 'table',
   classNames: ['table','table-striped','table-bordered','dataTable'],
-  error: '',
+  _tabler: '',
+  init: function(){
+    this._super(...arguments);
+  },
   initDataTable: function() {
     $.fn.dataTable.ext.errMode = 'none';
-    this.$().dataTable({
+    // window.mama = this.$();
+    this.set('_tabler', this.$().dataTable({
       ordering: true,
       info: true,
-      processing: true,
       autoWidth: true,
       search: {regex: true}/*,
       columns: [
@@ -51,6 +31,38 @@ export default Ember.Component.extend({
         { name: "Type", data: "credentials.type"},
       ]*/
 //      data: model
-    });
-  }.on('didInsertElement')
+    }));
+    this.set('_hook', this);
+  }.on('didInsertElement'),
+
+  // XXX HERE BE SO MANY TERRIBLE TERRIBLE THINGS
+  // This is wrong on so many levels:
+  // - we can't redraw if we have pending operations on the store, since it will trash the DOM
+  // - we also have to wait for the DOM to match the store state
+  // I hate dataTables
+  pending: 0,
+  flushable: false,
+
+  insertRow: function(file){
+    this.incrementProperty('pending');
+    var thisIsSoSoVeryWrongKitty = setInterval(function(){
+      var tr = document.getElementById('share-id-' + file.get('id'));
+      if(!tr)
+        return;
+      clearInterval(thisIsSoSoVeryWrongKitty);
+      this.decrementProperty('pending');
+      this.get('_tabler').api().row.add(tr);
+      if(!this.get('pending') && this.get('flushable')){
+        this.get('_tabler').api().draw();
+      }
+    }.bind(this), 100);
+  },
+
+  actions: {
+    deleteRow: function(file){
+      this.get('_tabler').api().row('#share-id-' + file.get('id')).remove().draw();
+      // ... and actually delete it
+      file.destroyRecord();
+    }
+  }
 });

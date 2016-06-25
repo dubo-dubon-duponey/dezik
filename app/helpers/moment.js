@@ -1,8 +1,17 @@
 import Ember from 'ember';
 
 export function momentFromNow(params/*, hash*/) {
-  let value = params[0];
-  return moment(value).fromNow();
+  let value = params.shift();
+  let type = params.shift();
+  switch(type){
+    case "fromNow":
+    default:
+      return moment(value).fromNow();
+      break;
+    case "valueOf":
+      return moment(value).valueOf();
+      break;
+  }
 }
 
 export default Ember.Helper.helper(momentFromNow);

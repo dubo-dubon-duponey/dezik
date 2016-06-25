@@ -90,6 +90,12 @@ export default Ember.Route.extend({
       parentModel: share
     }));
 
+    share.get('fields').pushObject(this.store.createRecord('schemafield', {
+      name: 'file',
+      type: 'string',
+      parentModel: share
+    }));
+
     registerModel(Ember.getOwner(this), share);
     return this.get('store').findAll('spacedogShare');
   }

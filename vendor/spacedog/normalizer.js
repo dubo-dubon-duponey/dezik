@@ -41,8 +41,21 @@
     };
 
     root.share = function(status, text){
-      console.debug('com.spacedog.tsygan::normalizer->root <<>>', text);
+      console.debug('com.spacedog.tsygan::normalizer->root::share <<>>', text);
       return JSON.parse(text);
+    };
+
+    root.share.delete = function(status, text, headers, options){
+      console.debug('com.spacedog.tsygan::normalizer->root <<>>', text);
+      var id = options.url.split('/');
+      var fname = id.pop();
+      id = id.pop() + '*' + decodeURIComponent(fname);
+      return {
+        data: {
+          id: id,
+          type: 'SpacedogShare'
+        }
+      };
     };
 
     root.share.get = function(status, payload, headers, options){
@@ -63,11 +76,13 @@
             delete item[key];
           }
         });
-        // {"path":"/8f703078-0cc5-43b9-ad01-4b4db99bbcaa/flouf","size":12,"lastModified":"2016-06-24T01:01:55.000Z","etag":"e3c2564e6685ef1f3d37d52a9ad8b4a7"}]}
         item.filename = item.path.split('/').pop();
+        // XXX remap identifiers here
+        var id = item.path.split('/');
+        var fname = id.pop();
+        id = id.pop() + '*' + fname;
         output.data.push({
-          // XXX remap identifiers here
-          id: item.path.split('/')[1],
+          id: id,
           type: 'SpacedogShare',
           attributes: item,
           relationships: {}
@@ -78,6 +93,25 @@
       console.debug('com.spacedog.tsygan::normalizer->root::log >>', output);
       return output;
     };
+
+    root.share.put = function(status, payload, headers, options){
+      payload = JSON.parse(payload);
+      var id = payload.path.split('/');
+      var fname = id.pop();
+      id = id.pop() + '*' + fname;
+      var output = {
+        data: {
+          id: id,
+          type: 'spacedog-share',
+          attributes: payload
+        }
+      };
+      var p = options.url.split('/');
+      p.pop();
+      payload.path  = p.join('/') + payload.path;
+      return output;
+    };
+
 
     root.schema = function(status, text){
       console.debug('com.spacedog.tsygan::normalizer->root::schema <<>>', text);

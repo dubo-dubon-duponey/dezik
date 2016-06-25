@@ -27,12 +27,25 @@ var route = function(options){
           });
           data = data.join('&');
           delete options.data;
-          options.url = options.url.replace(/spacedog-.*/, 'log');
+          options.url = options.url.replace(/spacedog-[^/]+/, 'log');
           options.url += '?' + data;
           break;
         case 'shares':
         case 'share':
-          options.url = options.url.replace(/spacedog-.*/, 'share');
+          options.url = options.url.replace(/spacedog-[^/]+/, 'share');
+          switch(options.type) {
+            // Schema creation (non-existent) reroutes to schema update
+            case 'POST':
+              options.type = 'PUT';
+              options.url += '/' + options.data.data.attributes.filename;
+              options.headers = options.headers || {};
+              options.headers['Content-type'] = options.data.data.attributes['content-type'];
+              options.data = options.data.data.attributes.file;
+              break;
+            case 'DELETE':
+              options.url = options.url.replace(/([/][^/*]+)([*])/, "$1/");
+              break;
+          }
           break;
       }
       break;
@@ -92,7 +105,7 @@ var normalize = function(options, status, response, headers){
   return processor(status, response, headers, options);
 };
 
-var spacedogAjax = function(options){
+var spacedogAjax = SpaceDog.ajax = function(options){
   // Reopen data
   try{
     options.data = JSON.parse(options.data);

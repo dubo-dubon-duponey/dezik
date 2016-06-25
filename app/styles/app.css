@@ -1,0 +1,10 @@
+.dropzone{
+  margin: 30px;
+  margin-right: auto;
+  margin-left: auto;
+  width: 250px;
+  height: 200px;
+  border: 1px dotted grey;
+  text-align: center;
+  background: url('/images/upload.png') no-repeat center center;
+}

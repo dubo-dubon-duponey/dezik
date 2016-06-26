@@ -40,7 +40,10 @@ var route = function(options){
               options.url += '/' + options.data.data.attributes.filename;
               options.headers = options.headers || {};
               options.headers['Content-type'] = options.data.data.attributes['content-type'];
+              // options.headers['Content-type'] = 'text/plain; charset=x-user-defined-binary';
               options.data = options.data.data.attributes.file;
+              options.processData = false;
+              options.contentType = false;
               break;
             case 'DELETE':
               options.url = options.url.replace(/([/][^/*]+)([*])/, "$1/");
@@ -117,7 +120,6 @@ var spacedogAjax = SpaceDog.ajax = function(options){
   if (['POST', 'PUT', 'PATCH'].indexOf(options.type) !== -1)
     serialize(options);
 
-  options.data = JSON.stringify(options.data);
   if (options.data === '{}')
     options.data = '';
 
@@ -173,6 +175,21 @@ export default JSONAPIAdapter.extend({
     // Defer to our own, framework generic JSONAPI compatible implementation of ajax to hide away SpaceDog service specifics
     spacedogAjax(options);
   },
+
+  ajaxOptions(url, type, options) {
+    // Stupidly, this super forces stringification of data payload, which is a $``.??!!$.
+    // So, lie!
+    var d;
+    if(options){
+      var d = options.data;
+      delete options.data;
+    }
+    var ret = this._super(...arguments);
+    ret.data = d;
+    return ret;
+  },
+
+
 
   generateIdForRecord: function(store, inputProperties) {
     console.warn('com.spacedog.tsygan::generateIdForRecord', inputProperties);

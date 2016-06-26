@@ -15,15 +15,15 @@
   };
 
   // How to serialize Schemas
-  /*serializer.share.put = function(jsonAPIData) {
-    console.debug('com.spacedog.tsygan::serializer->root::share::put <<>>');
+  serializer.share.put = function(jsonAPIData) {
+    console.debug('com.spacedog.tsygan::serializer->root::share::put <<>>', jsonAPIData.length);
     return jsonAPIData;
-  };*/
+  };
 
   // How to serialize Schemas
   serializer.schema = function(jsonAPIData) {
     console.debug('com.spacedog.tsygan::serializer->root::schema <<>>', jsonAPIData);
-    return jsonAPIData;
+    return JSON.stringify(jsonAPIData);
   };
 
   serializer.schema.put = function(jsonAPIData) {
@@ -54,7 +54,7 @@
       };
 
     console.debug('com.spacedog.tsygan::serializer->root::schema::put >>', output);
-    return output;
+    return JSON.stringify(output);
   };
 
   // How to serialize SchemaFields (only called by schema serializer, since this does not exist independently in spacedog)

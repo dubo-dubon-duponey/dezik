@@ -5,13 +5,13 @@ export default Component.extend({
   tagName: 'table',
   classNames: ['table','table-striped','table-bordered','dataTable'],
   _tabler: '',
-  init: function(){
-    this._super(...arguments);
+  
+  initUplink: function() {
     this.set('_hook', this);
-  },
+  }.on('willInsertElement'),
+
   initDataTable: function() {
     $.fn.dataTable.ext.errMode = 'none';
-    // window.mama = this.$();
     this.set('_tabler', this.$().dataTable({
       ordering: true,
       info: true,

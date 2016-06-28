@@ -13,7 +13,7 @@ export default Controller.extend({
 
   items: Ember.computed('model.[]', function(){
     return this.get('model').filter(function(item){
-      return !item.get('id').match(/^spacedog/);
+      return !item.get('id').match(/^Spacedog/i);
     })
   }),
 
@@ -23,14 +23,14 @@ export default Controller.extend({
     // Add a new model
     newModel(modelId) {
       // XXX This may fail here if record id already exist (for example)
-      const model = this.store.createRecord('schema', {
+      const model = this.store.createRecord('SpacedogSchema', {
         // XXX SpaceDog damnit! https://github.com/spacedog-io/services/issues/34
         id: modelId.toLowerCase().replace(/[\\/*?"<>|\s]/g, '')
       });
 
       // this.send('newField', model);
       model.save();
-      this.set('model', this.store.peekAll('schema'));
+      this.set('model', this.store.peekAll('SpacedogSchema'));
       // this.model.pushObjects(model);
     },
 
@@ -39,7 +39,7 @@ export default Controller.extend({
       const currentFields = model.get('fields');
 
       currentFields.then((data) => {
-        const newField = this.store.createRecord('schemafield', {
+        const newField = this.store.createRecord('SpacedogSchemafield', {
           parentModel: model,
           type: 'string',
           dirty: true
@@ -76,7 +76,7 @@ export default Controller.extend({
 
     // Triggered when fields are updated - change the state to not saved
     updateFields(modelId) {
-      var model = this.store.peekRecord('schema', modelId);
+      var model = this.store.peekRecord('SpacedogSchema', modelId);
       model.set('dirty', true);
       // model.save();
     }

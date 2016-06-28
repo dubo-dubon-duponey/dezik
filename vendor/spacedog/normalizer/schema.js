@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  // var TYPE = 'SpacedogSchema';
+  var TYPE = 'spacedog-schema';
   var LOG_PREFIX = 'com.spacedog.tsygan::normalizer->schema::';
 
   (function(){
@@ -26,7 +26,7 @@
 
       var json = {
         id: id,
-        type: 'schemafield',
+        type: 'spacedog-schemafield',
         attributes: {
           name: name,
           type: hash._type,
@@ -39,7 +39,7 @@
         relationships: {
           'parent-model': {
             data: {
-              type: 'schema',
+              type: 'spacedog-schema',
               id: parent
             }
           }
@@ -55,7 +55,7 @@
         data: {
           // XXX this is dangerous, and necessary because of % (for eg) being allowed in urls
           id: decodeURIComponent(url.split('/').pop()),
-          type: 'schema'
+          type: TYPE
         }
       };
       console.debug(LOG_PREFIX + 'delete >>', json);
@@ -67,7 +67,7 @@
       var payload = {meta: response};
       payload.data = {
         id: payload.meta.id,
-        type: payload.meta.type
+        type: 'spacedog-schema' // XXX can't trust payload.meta.type because...
       };
       delete payload.meta.id;
       delete payload.meta.type;
@@ -99,7 +99,7 @@
           // Ember id of the schema is the key/name
           id: schemaId,
           // Type is actually schema, but then
-          type: 'schema',
+          type: TYPE,
           // Add the relationships ids to be linked
           relationships: {
             fields: {
@@ -128,7 +128,7 @@
           // So, this is the "short version"
           ids.push({
             id: id,
-            type: 'schemafield'
+            type: 'SpacedogSchemafield'
           });
 
           attrs.push(schemafield(attrName, response[schemaId][attrName]));

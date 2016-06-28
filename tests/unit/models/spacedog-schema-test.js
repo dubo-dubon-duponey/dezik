@@ -1,6 +1,6 @@
 import { moduleForModel, test } from 'ember-qunit';
 
-moduleForModel('schema', 'Unit | Model | schema', {
+moduleForModel('spacedog-schema', 'Unit | Model | spacedogschema', {
   // Specify the other units that are required for this test.
   needs: []
 });

@@ -58,7 +58,7 @@
         // XXX brutal pascal - we need the FQDN in here, so, abuse the base request url
         item.path = url + item.path;
       });
-      console.debug(LOG_PREFIX + 'log >>', output);
+      console.debug(LOG_PREFIX + 'get >>', output);
       return output;
     };
 
@@ -83,3 +83,4 @@
 
   }).apply(this.normalize || (this.normalize = {}));
 }).apply(this.SpaceDog || (this.SpaceDog = {}));
+

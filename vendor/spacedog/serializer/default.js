@@ -16,12 +16,26 @@
     return jsonAPIData;
   };
 
-  this.serialize = function(url, method, data){
+  var idemSerializer = function(options){
+    // Process data options for methods without body
+    var data = Object.getOwnPropertyNames(options.data || {}).map(function(key){
+      return key + '=' + options.data[key];
+    }).join('&');
+    delete options.data;
+    if (data)
+      options.url += '?' + data;
+  };
+
+  this.serialize = function(options){
+    // Idempotent serializers have a different strategy
+    if(['POST', 'PUT', 'PATCH'].indexOf(options.type) === -1)
+      return idemSerializer(options);
+
     // Urls at that point resemble "/service/identifier/foo/bar/baz"
-    var service = url.split('/');
+    var service = options.url.split('/');
     service.shift();
     var processor = this.serialize[service.shift()] || defaultSerializer;
-    return (processor[method.toLowerCase()] || processor)(data);
+    return options.data = (processor[options.type.toLowerCase()] || processor)(options.data);
   };
 
 }).apply(this.SpaceDog || (this.SpaceDog = {}));

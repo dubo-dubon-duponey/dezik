@@ -1,8 +1,8 @@
 import { moduleForModel, test } from 'ember-qunit';
 
-moduleForModel('schema', 'Unit | Serializer | schema', {
+moduleForModel('SpacedogSchema', 'Unit | Serializer | spacedogschema', {
   // Specify the other units that are required for this test.
-  needs: ['serializer:schema']
+  needs: ['serializer:spacedogschema']
 });
 
 // Replace this with your real tests.

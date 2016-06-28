@@ -16,7 +16,7 @@ export default Ember.Controller.extend({
         this.incrementProperty('_pending');
 
         // Create a record
-        var asset = this.store.createRecord('spacedogShare', {
+        var asset = this.store.createRecord('SpacedogShare', {
           id: '',
           lastModified:  file.lastModified,
           filename: file.name,

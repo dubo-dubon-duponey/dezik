@@ -6,35 +6,34 @@ var user = 'dmp';
 var pwd = 'v4whZw4XZBUBpA';
 
 var route = function(options){
-  console.warn('Routing interceptor patrol', options.data, options.url, options.type);
   // Depluralize all leading endpoints
   options.url = options.url.replace(/^(\/[^\/]+)(s)($|\/)/, '$1$3');
+
+  // Accomodate SpaceDog method oddities
+  switch(options.type){
+    // Record modification uses PUT instead of PATCH
+    case 'PATCH':
+      options.type = 'PUT';
+      break;
+  }
+
 
   // Now, vary on the first segment path
   var root = options.url.split('/');
   root.shift();
   var secondary = root.shift().split('-');
   root = secondary.shift();
+
   switch(root){
     // Endpoints prefixed with spacedog- are used as a trick to reforward to a different endpoint
     case 'spacedog':
+      // console.warn('foooo', options.url);
+      options.url = options.url.replace(/^\/spacedog-([^/]+)/, '/$1');
       switch(secondary.shift()){
-        case 'logs':
-        case 'log':
-          var data = [];
-          Object.getOwnPropertyNames(options.data).forEach(function(key){
-            data.push(key + '=' + options.data[key]);
-          });
-          data = data.join('&');
-          delete options.data;
-          options.url = options.url.replace(/spacedog-[^/]+/, 'log');
-          options.url += '?' + data;
-          break;
         case 'shares':
         case 'share':
-          options.url = options.url.replace(/spacedog-[^/]+/, 'share');
           switch(options.type) {
-            // Schema creation (non-existent) reroutes to schema update
+            // Share creation gymnastic
             case 'POST':
               options.type = 'PUT';
               options.url += '/' + options.data.data.attributes.filename;
@@ -46,66 +45,37 @@ var route = function(options){
               options.contentType = false;
               break;
             case 'DELETE':
+              // Trick to get back the full /id/filename from /id*filename (embedded as an actual object id)
               options.url = options.url.replace(/([/][^/*]+)([*])/, "$1/");
               break;
           }
           break;
+        case 'schema':
+          switch(options.type){
+            // Schema creation (non-existent) reroutes to schema updat
+            case 'POST':
+              options.type = 'PUT';
+              options.url += '/' + options.data.data.id;
+              break;
+          }
+          break;
+        case 'schemafields':
+        case 'schemafield':
+          switch(options.type){
+            case 'DELETE':
+              console.warn('gonna fake it');
+              options.fakeIt = true;
+              break;
+          }
+          break;
+
       }
       break;
-    case 'schema':
-      switch(options.type){
-        // Schema creation (non-existent) reroutes to schema update
-        case 'POST':
-          options.type = 'PUT';
-          options.url += '/' + options.data.data.id;
-          break;
-        // Schema update uses PUT
-        case 'PATCH':
-          options.type = 'PUT';
-          break;
-      }
-      break;
-    case 'schemafield':
-      switch(options.type){
-        case 'DELETE':
-          options.fakeIt = true;
-          break;
-      }
+
+    default:
+      console.warn('THAT MUST BE DATA');
       break;
   }
-};
-
-/*return new Ember.RSVP.Promise(function (resolve, reject) {
- return Ember.run(null, resolve, {status: 200});
- });*/
-
-
-// Resolver that finds the most specialized serializer for any given operation (eg: /schema PUT, or /data GET)
-var serialize = function(options){
-  var root = options.url.split('/');
-  root.shift();
-  root = root.shift();
-  var meth = options.type.toLowerCase();
-  var processor = SpaceDog.serialize;
-  if(root in processor){
-    processor = processor[root];
-    if(meth in processor)
-      processor = processor[meth];
-  }
-  options.data = processor(options.data);
-};
-
-var normalize = function(options, status, response, headers){
-  var root = options.url.split('/');
-  root = root[4].split('?').shift();
-  var meth = options.type.toLowerCase();
-  var processor = SpaceDog.normalize;
-  if(root in processor){
-    processor = processor[root];
-    if(meth in processor)
-      processor = processor[meth];
-  }
-  return processor(status, response, headers, options);
 };
 
 var spacedogAjax = SpaceDog.ajax = function(options){
@@ -117,11 +87,23 @@ var spacedogAjax = SpaceDog.ajax = function(options){
   // Translate JSONAPI calls to SpaceDog inhouse routing transparently
   route(options);
   // Serialize payload if there is one
+  SpaceDog.serialize(options);
+/*
   if (['POST', 'PUT', 'PATCH'].indexOf(options.type) !== -1)
-    serialize(options);
+    options.data = SpaceDog.serialize(options.url, options.type, options.data);
+  else{
+    // Process data options for methods without body
+    var data = Object.getOwnPropertyNames(options.data || {}).map(function(key){
+      return key + '=' + options.data[key];
+    }).join('&');
+    delete options.data;
+    if (data)
+      options.url += '?' + data;
+  }
+*/
 
-  if (options.data === '{}')
-    options.data = '';
+  /*if (options.data === '{}')
+    options.data = '';*/
 
   // Map to the appropriate domain
   options.url = 'https://' + domain + '.spacedog.io/1' + options.url;
@@ -133,7 +115,7 @@ var spacedogAjax = SpaceDog.ajax = function(options){
   var defer = options.success;
   // Normalize payload before passing it down
   options.success = function (payload, textStatus, jqXHR) {
-    payload = normalize(options, jqXHR.status, jqXHR.responseText, jqXHR.getAllResponseHeaders());
+    payload = SpaceDog.normalize(options.url, options.type, jqXHR.responseText);
     defer.apply(options, [payload, textStatus, jqXHR]);
   };
   if (!options.fakeIt)
@@ -141,9 +123,10 @@ var spacedogAjax = SpaceDog.ajax = function(options){
   else
     setTimeout(options.success, 1,
       undefined, 200, {
-        responseText: '{"data": {"id": "' + decodeURIComponent(options.url.split('/').pop()) + '", "type": "schemafield"}}',
+        status: 200,
+        responseText: '{"data": {"id": "' + decodeURIComponent(options.url.split('/').pop()) + '", "type": "spacedog-schemafield"}}',
         getAllResponseHeaders: function(){
-          return {'Content-Type':'application/json;charset=UTF-8'};
+          return 'Content-Type: application/json;charset=UTF-8';
         }
       });
 };
@@ -152,12 +135,12 @@ var spacedogAjax = SpaceDog.ajax = function(options){
 export default JSONAPIAdapter.extend({
   _ajaxRequest: function(options) {
     // Hijack the error handler to be able to send an alert on the data store
-    var dferr = options.error;
+    var originalOnError = options.error;
     options.error = function (jqXHR, textStatus, errorThrown) {
       Ember.getOwner(this).lookup('service:store').createRecord('alert', {
         type: 'danger',
         title: 'SpaceDog service erroring out!',
-        message: 'Status: ' + (textStatus || 'FATAL') + ' - ErrorThrown: ' + (errorThrown || 'Service is tits-up with no specific error!'),
+        message: 'Status: ' + (textStatus || 'NOTHING!') + ' - ErrorThrown: ' + (errorThrown || 'Service is tits-up with no specific error thrown!'),
         destruct: 0
       });
 
@@ -169,7 +152,7 @@ export default JSONAPIAdapter.extend({
       });
 
       // Continue with the downstream error handler
-      dferr.apply(options, [jqXHR, textStatus, errorThrown]);
+      originalOnError.apply(options, [jqXHR, textStatus, errorThrown]);
     }.bind(this);
 
     // Defer to our own, framework generic JSONAPI compatible implementation of ajax to hide away SpaceDog service specifics
@@ -177,11 +160,11 @@ export default JSONAPIAdapter.extend({
   },
 
   ajaxOptions(url, type, options) {
-    // Stupidly, this super forces stringification of data payload, which is a $``.??!!$.
-    // So, lie!
+    // The REST implementation forces stringification of the request body, regardless of what it is (doesn't work for files, obviously)
+    // So, lie about it (and don't pay the perf penaly either) :)
     var d;
     if(options){
-      var d = options.data;
+      d = options.data;
       delete options.data;
     }
     var ret = this._super(...arguments);
@@ -189,8 +172,7 @@ export default JSONAPIAdapter.extend({
     return ret;
   },
 
-
-
+  // Default id generator in case no id is specified
   generateIdForRecord: function(store, inputProperties) {
     console.warn('com.spacedog.tsygan::generateIdForRecord', inputProperties);
     return SpaceDog.uuid.generate();

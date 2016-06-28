@@ -7,9 +7,9 @@ export default Model.extend({
   // Name of the field
   name:             attr('string'),// , {defaultValue: 'My New Field'}
   // Type of the field (see transforms for full list)
-  type:             attr('type', {defaultValue: 'string'}),
+  type:             attr('spacedog-type', {defaultValue: 'string'}),
   // Links back to the parent model this schema belong to
-  parentModel:      belongsTo('schema'),
+  parentModel:      belongsTo('SpacedogSchema'),
   // Whether the field should be required - if it is, a defaultValue can be specified
   required:         attr('boolean', {defaultValue: false}),
   // Default value, in case the field is required
@@ -17,9 +17,11 @@ export default Model.extend({
   // Whether the field is an array of things
   array:            attr('boolean', {defaultValue: false}),
   // In case the field type is a string, what language is that (see transforms)
-  language:         attr('language', {defaultValue: 'English'}),
+  language:         attr('spacedog-language', {defaultValue: 'English'}),
   // Useful
   enumSet:         attr('enum'),
+
+  // Implement / use: _examples, _values, _gt, _gte, _lt, _lte et _pattern
 
   // XXX relate to references
   relatedTo:        attr('string', {defaultValue: null}),

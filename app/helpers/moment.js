@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-export function momentFromNow(params/*, hash*/) {
+export function momentify(params/*, hash*/) {
   let value = params.shift();
   let type = params.shift();
   switch(type){
@@ -14,4 +14,4 @@ export function momentFromNow(params/*, hash*/) {
   }
 }
 
-export default Ember.Helper.helper(momentFromNow);
+export default Ember.Helper.helper(momentify);

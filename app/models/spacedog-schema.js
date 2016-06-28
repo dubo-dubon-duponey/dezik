@@ -3,9 +3,7 @@ import Model from 'ember-data/model';
 import { hasMany } from 'ember-data/relationships';
 
 export default Model.extend({
-  fields: hasMany('schemafield')
+  fields: hasMany('SpacedogSchemafield')
 });
-
-
 
 // XXX Schema name (id) must not contain \\,/, *, ?, \", <, >, |,  , ,

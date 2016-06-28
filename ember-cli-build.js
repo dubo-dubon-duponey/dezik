@@ -66,8 +66,15 @@ module.exports = function(defaults) {
   app.import('vendor/spacedog/utils/json.js');
   app.import('vendor/spacedog/utils/json.css');
   app.import('vendor/spacedog/transforms.js');
-  app.import('vendor/spacedog/normalizer.js');
-  app.import('vendor/spacedog/serializer.js');
+  // Normalizers
+  app.import('vendor/spacedog/normalizer/default.js');
+  app.import('vendor/spacedog/normalizer/log.js');
+  app.import('vendor/spacedog/normalizer/share.js');
+  app.import('vendor/spacedog/normalizer/schema.js');
+  // Serializers
+  app.import('vendor/spacedog/serializer/default.js');
+  app.import('vendor/spacedog/serializer/share.js');
+  app.import('vendor/spacedog/serializer/schema.js');
   app.import('vendor/spacedog.js');
 
   return app.toTree();

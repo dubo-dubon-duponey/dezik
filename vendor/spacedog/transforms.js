@@ -1,6 +1,7 @@
 (function(){
   "use strict";
 
+  // Just a helper to lookup maps of data both ways
   var mapper = function(mapping, canBeEmpty) {
     return {
       deserialize: function (serialized) {

@@ -38,6 +38,8 @@
     "ember-load-initializers": "^0.5.1",
     "ember-resolver": "^2.0.3",
     "emberx-select": "2.1.2",
-    "loader.js": "^4.0.1"
+    "loader.js": "^4.0.1",
+    "tsygan": "git+https://github.com/dubo-dubon-duponey/tsygan.git",
+    "closerkit": "git+https://github.com/dubo-dubon-duponey/closerkit.git"
   }
 }

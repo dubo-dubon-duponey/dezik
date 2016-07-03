@@ -2,9 +2,16 @@ import Ember from 'ember';
 
 const { Component, observer } = Ember;
 
+import Constants from 'tsygan/constants';
+const { types, languages } = Constants;
+
 export default Component.extend({
-  typeOptions: SpaceDog.transforms.type.dump(),
-  languageOptions: SpaceDog.transforms.language.dump(),
+  typeOptions: Object.keys(types).map(function(key){
+    return key;
+  }),
+  languageOptions: Object.keys(languages).map(function(key){
+    return key;
+  }),
   modelList: null,
   field: null,
   changeObserver: observer('field.name', 'field.type', 'field.array', 'field.language', 'field.required', 'field.defaultValue', 'field.enumSet', 'field.relatedTo', function () {

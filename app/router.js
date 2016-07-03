@@ -11,6 +11,8 @@ Router.map(function() {
   this.route('index', {path: '/'});
   this.route('audit');
   this.route('share');
+  this.route('restricted');
+  this.route('login');
 });
 
 export default Router;

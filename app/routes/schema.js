@@ -1,7 +1,7 @@
-import Ember from 'ember';
+import Restricted from './restricted';
 
-export default Ember.Route.extend({
+export default Restricted.extend({
   model() {
-    return this.store.findAll('SpacedogSchema');
+    return this.store.findAll('tsygan@spacedog-schema');
   }
 });

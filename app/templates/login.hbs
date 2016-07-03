@@ -1,0 +1,30 @@
+<article class="container container-fill-height">
+    <div class="container container-content-middle">
+        <div class="jumbotron">
+            <div class="pull-right">
+<!--              {{panel-alert max=2}}-->
+            </div>
+            <h1>Dezik</h1>
+            <p>le backo qui envoie du chien</p>
+        <p class="text-xs-center">
+          {{#if error}}
+            {{#ck-alert type='danger' dismissible=true}}{{error}}{{/ck-alert}}
+          {{/if}}
+            {{#ck-label type='info'}}Backend{{/ck-label}}
+            {{input type='text' disabled=pending value=domain placeholder='Backend name' class='form-control'}}
+              <br />
+            {{#ck-label type='info'}}Login{{/ck-label}}
+            {{input type='text' disabled=pending value=user placeholder='Login' class='form-control'}}
+              <br />
+            {{#ck-label type='info'}}Password{{/ck-label}}
+            {{input type='password' disabled=pending value=password placeholder='Password' class='form-control'}}
+
+          <br />
+            {{#ck-button action="signIn" id="frum" type="primary" size="large" loading="Logging in..." state=triggerState}}
+              {{ck-icon icon="dog" collection="icon"}} Login
+            {{/ck-button}}
+
+            </p>
+        </div>
+    </div>
+</article>

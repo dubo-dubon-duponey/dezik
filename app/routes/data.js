@@ -1,6 +1,6 @@
-import Ember from 'ember';
+import Restricted from './restricted';
 
-export default Ember.Route.extend({
+export default Restricted.extend({
   model(params) {
     return this.store.findAll(params.data_schema);
   }

@@ -13,23 +13,20 @@ Layout the top level navigation here?
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="https://github.com/dubo-dubon-duponey/dezik">
-                <img title="Dezik, le poney qui a du chien" src="images/brand.png" alt="brand">
-            </a>
         </div>
         <div class="navbar-collapse collapse" id="navbar-collapse-main">
 
             <ul class="nav navbar-nav hidden-xs">
+                <div id="foo" style="display: none;">
+                  {{#ck-button type="info" isVisible=loggedOut action="login"}}Log in{{/ck-button}}
+                  {{#ck-button type="danger" isVisible=loggedIn action="logout"}}Log out{{/ck-button}}
+                </div>
                 <li>
-                    <button class="btn btn-default navbar-btn navbar-btn-avitar" data-toggle="popover">
-                        <img class="img-circle" src="images/avatar.png">
-                    </button>
+                  {{#ck-popover tagName="button" classNames="btn btn-default navbar-btn navbar-btn-avitar"
+                                html=true contentFrom="#foo"}}
+                      <img class="img-circle" src="images/avatar.png">
+                  {{/ck-popover}}
                 </li>
-          <!--
-                <li>
-                  {{#link-to "index"}}Home{{/link-to}}
-                </li>
-          -->
                 <li>
                   {{#link-to "schema"}}Schemas{{/link-to}}
                 </li>
@@ -78,13 +75,6 @@ Layout the top level navigation here?
     </div>
 </nav>
 
-<!--
-<div class="container p-t-md">
-    <div class="row">
-        <div class="col-md-3">
-            <div class="panel panel-default panel-profile m-b-md">
--->
-
 <div class="container m-t-lg">
     <div class="container">
         {{outlet}}
@@ -92,4 +82,4 @@ Layout the top level navigation here?
 </div>
 
 <!-- Alert panel -->
-{{bs-growl max=10}}
+{{ck-growl max=10}}

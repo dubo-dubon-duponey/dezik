@@ -1,3 +1,4 @@
+// v1
 import Ember from 'ember';
 
 export function momentify(params/*, hash*/) {

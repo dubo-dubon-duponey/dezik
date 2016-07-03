@@ -43,8 +43,8 @@ export default Ember.Component.extend({
       columns: [
         { name: "Method", data: "method" },
         { name: "Path", data: "path" },
+        // XXX SpaceDog not usable right now https://github.com/spacedog-io/services/issues/46
         { name: "Query", data: "query", render: function(data){
-          // XXX SpaceDog broken right now https://github.com/spacedog-io/services/issues/46
           return '';
           if(!data)
             return '';

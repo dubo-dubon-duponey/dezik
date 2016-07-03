@@ -33,7 +33,9 @@ export default Controller.extend({
     newModel(modelId) {
       // XXX This may fail here if record id already exist (for example)
       const model = this.store.createRecord('tsygan@spacedog-schema', {
-        // XXX SpaceDog damnit! https://github.com/spacedog-io/services/issues/34
+        // XXX SpaceDog https://github.com/spacedog-io/services/issues/34
+        // https://github.com/spacedog-io/services/issues/31
+        // XXX should be expressed on id type / validated on input instead
         id: modelId.toLowerCase().replace(/[\\/*?"<>|\s]/g, '')
       });
 

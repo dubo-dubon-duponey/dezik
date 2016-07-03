@@ -11,7 +11,7 @@ export default Controller.extend({
       // Recomputing everything - very ineficient, but not time for fancy shit
       var isUserDefined = !item.get('id').match(/^tsygan@/i);
       // XXX double registration doesn't work obviously
-      console.warn('---', item.get('id'), isUserDefined);
+      // console.warn('---', item.get('id'), isUserDefined);
       if(isUserDefined)
         SpaceDog.register(Ember.getOwner(this), item);
       return isUserDefined;

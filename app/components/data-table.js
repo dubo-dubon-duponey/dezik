@@ -4,7 +4,7 @@ import attr from 'ember-data/attr';
 
 var x = 0;
 
-var popover = function ( data, type, full, meta ) {
+var popover = function ( data, text, title ) {
   if(!data)
     return '';
   // XXX Pretty terrible
@@ -19,7 +19,7 @@ var popover = function ( data, type, full, meta ) {
       trigger: "focus"
     });
   }, 100, '#popover-response-' + x);
-  var node = '<a id="popover-response-' + x + '" tabindex="0" class="btn btn-xs btn-info" role="button">Show</a>';
+  var node = '<a id="popover-response-' + x + '" tabindex="0" class="btn btn-xs btn-info" role="button">' + text + '</a>';
   x++;
   return node;
 };
@@ -43,6 +43,32 @@ export default Ember.Component.extend({
       columns: [
         { name: "Method", data: "method" },
         { name: "Path", data: "path" },
+        { name: "Query", data: "query", render: function(data){
+          // XXX SpaceDog broken right now https://github.com/spacedog-io/services/issues/46
+          return '';
+          if(!data)
+            return '';
+          return '<pre>' + Object.keys(data).map(function(key){
+              return key + '=' + data[key];
+            }).join('\n') + '</pre>';
+        }},
+        { name: "User-agent", data: "headers.User-agent", render: function(data){
+          if(!data)
+            return;
+          var parser = new UAParser();
+          parser.setUA(data);
+          var result = parser.getResult();
+          delete result.ua;
+          return popover(result, result.browser.name + ' ' + result.browser.major, data);
+        }},
+        { name: "Headers", data: "headers", render: function(data){
+          var result = {};
+          Object.keys(data).forEach(function(key){
+            if(key != 'User-agent')
+              result[key] = data[key];
+          });
+          return popover(result, 'Show');
+        }},
         { name: "Received at", data: "receivedAt", type: "date", render: function(data){
           // XXX FIXME ordering won't work on this obviously
           return '<span title="' + moment(data).format('MMMM Do YYYY, h:mm:ss a') + '">' + moment(data).fromNow() + '</span>';
@@ -50,10 +76,14 @@ export default Ember.Component.extend({
 
         { name: "Processing time", data: "processedIn", type: "num" },
         { name: "Status", data: "status", type: "num" },
-        { name: "Request body", data: "jsonContent", render: popover },
-        { name: "Response", data: "response", render: popover},
+        { name: "Request body", data: "jsonContent", render: function(data){
+          return popover(data, 'Show');
+        } },
+        { name: "Response", data: "response", render: function(data){
+          return popover(data, 'Show');
+        } },
         { name: "Name", data: "credentials.name"},
-        { name: "Type", data: "credentials.type"},
+        { name: "Type", data: "credentials.type"}
       ],
       ajax: function (options, callback/*, settings*/) {
         this.sendAction('query', options, function(data, errorTitle, errorMessage) {

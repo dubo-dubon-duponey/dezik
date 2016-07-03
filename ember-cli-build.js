@@ -43,13 +43,6 @@ module.exports = function(defaults) {
   app.import('vendor/theme-application/docs/assets/css/toolkit.css');
   app.import('vendor/theme-application/docs/assets/css/application.css');
   app.import('vendor/theme-application/docs/assets/js/toolkit.js');
-/*
-  app.import('bower_components/bootstrap/fonts/glyphicons-halflings-regular.eot');
-  app.import('bower_components/bootstrap/fonts/glyphicons-halflings-regular.svg');
-  app.import('bower_components/bootstrap/fonts/glyphicons-halflings-regular.ttf');
-  app.import('bower_components/bootstrap/fonts/glyphicons-halflings-regular.woff');
-  app.import('bower_components/bootstrap/fonts/glyphicons-halflings-regular.woff2');
-*/
 
   // DataTables add-on
   // app.import('bower_components/datatables/media/css/jquery.dataTables.css');
@@ -59,6 +52,8 @@ module.exports = function(defaults) {
 
   // Moment
   app.import('bower_components/moment/moment.js');
+
+  app.import('bower_components/ua-parser-js/src/ua-parser.js');
 
   return app.toTree();
 };

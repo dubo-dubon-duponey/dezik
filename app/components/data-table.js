@@ -62,6 +62,8 @@ export default Ember.Component.extend({
           return popover(result, result.browser.name + ' ' + result.browser.major, data);
         }},
         { name: "Headers", data: "headers", render: function(data){
+          if(!data)
+            return;
           var result = {};
           Object.keys(data).forEach(function(key){
             if(key != 'User-agent')

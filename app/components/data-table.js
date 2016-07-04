@@ -1,6 +1,4 @@
 import Ember from 'ember';
-import Model from 'ember-data/model';
-import attr from 'ember-data/attr';
 
 var x = 0;
 
@@ -58,6 +56,8 @@ export default Ember.Component.extend({
           var parser = new UAParser();
           parser.setUA(data);
           var result = parser.getResult();
+          if(!result.browser.name)
+            return result.ua;
           delete result.ua;
           return popover(result, result.browser.name + ' ' + result.browser.major, data);
         }},

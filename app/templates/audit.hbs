@@ -1,33 +1,25 @@
-<h3>Log auditor</h3>
+<h3>Log explorer</h3>
 <div class="container-inner">
   {{outlet}}
   {{#data-table data=model query="query"}}
-<!--
-      <table class="table table-striped" cellspacing="0" width="100%">
-      -->
-          <thead>
-          <tr>
-              <th>Method</th>
-              <th>Path</th>
-              <th>Query</th>
-              <th>User-Agent</th>
-              <th>Headers</th>
-              <th>Received at</th>
-              <th>Processed in</th>
-              <th>Status</th>
-              <th>Request body</th>
-              <th>Response body</th>
-              <th>Name</th>
-              <th>Level</th>
-          </tr>
-          </thead>
-          <tbody>
-          </tbody>
-
-<!--
-      </table>
-      -->
-
+      <thead>
+      <tr>
+          <th>Method</th>
+          <th>Path</th>
+          <th>Query</th>
+          <th>User-Agent</th>
+          <th>Headers</th>
+          <th>Received at</th>
+          <th>Processed in</th>
+          <th>Status</th>
+          <th>Request body</th>
+          <th>Response body</th>
+          <th>Name</th>
+          <th>Level</th>
+      </tr>
+      </thead>
+      <tbody>
+      </tbody>
   {{/data-table}}
 
 </div>

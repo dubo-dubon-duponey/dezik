@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-const { Controller, computed, observer } = Ember;
+const { Controller, computed } = Ember;
 
 export default Controller.extend({
   creatingNewModel: false,
@@ -9,13 +9,12 @@ export default Controller.extend({
   items: Ember.computed('model.[]', function(){
     return this.get('model').filter(function(item){
       // Recomputing everything - very ineficient, but not time for fancy shit
-      var isUserDefined = !item.get('id').match(/^tsygan@/i);
+      return !item.get('id').match(/^tsygan@/i);
       // XXX double registration doesn't work obviously
       // console.warn('---', item.get('id'), isUserDefined);
-      if(isUserDefined)
-        SpaceDog.register(Ember.getOwner(this), item);
-      return isUserDefined;
-    }, this)
+      /*if(isUserDefined)
+        SpaceDog.register(Ember.getOwner(this), item);*/
+    }, this);
   }),
 
   // List of ids

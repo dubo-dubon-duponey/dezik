@@ -14,8 +14,7 @@ export default Ember.Component.extend({
       this.set('modelId', '');
       this.set('isCreating', false);
       return false;
-    }
-    else if (event.keyCode === ESCAPE_KEY) {
+    } else if (event.keyCode === ESCAPE_KEY) {
       event.preventDefault();
       this.set('isCreating', false);
     }

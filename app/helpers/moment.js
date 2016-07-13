@@ -1,17 +1,16 @@
 // v1
+/* global moment:false */
 import Ember from 'ember';
 
 export function momentify(params/*, hash*/) {
   let value = params.shift();
   let type = params.shift();
-  switch(type){
-    case "fromNow":
+  switch (type){
+    case 'fromNow':
     default:
       return moment(value).fromNow();
-      break;
-    case "valueOf":
+    case 'valueOf':
       return moment(value).valueOf();
-      break;
   }
 }
 

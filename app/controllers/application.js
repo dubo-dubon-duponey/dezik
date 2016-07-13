@@ -2,22 +2,22 @@ import Ember from 'ember';
 const {computed} = Ember;
 
 export default Ember.Controller.extend({
-  kevinspacey: Ember.inject.service('tsygan@spacedog'),
-  loggedIn: computed('kevinspacey.verified', function(){
-    return this.get('kevinspacey.verified');
+  spaceydog: Ember.inject.service('tsygan@spacedog'),
+  loggedIn: computed('spaceydog.verified', function(){
+    return this.get('spaceydog.verified');
   }),
-  loggedOut: computed('kevinspacey.verified', function(){
-    return !this.get('kevinspacey.verified');
+  loggedOut: computed('spaceydog.verified', function(){
+    return !this.get('spaceydog.verified');
   }),
-  pending: computed('kevinspacey.pending', function(){
-    return this.get('kevinspacey.pending');
+  pending: computed('spaceydog.pending', function(){
+    return this.get('spaceydog.pending');
   }),
   actions: {
     login: function(){
       this.get('target').transitionTo('login');
     },
     logout: function(){
-      this.get('kevinspacey').logout();
+      this.get('spaceydog').logout();
     }
   }
 });

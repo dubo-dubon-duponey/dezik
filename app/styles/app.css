@@ -1,7 +1,5 @@
 .dropzone{
-  margin: 30px;
-  margin-right: auto;
-  margin-left: auto;
+  margin: 30px auto;
   width: 250px;
   height: 200px;
   border: 1px dotted grey;

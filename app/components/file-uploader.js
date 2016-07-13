@@ -23,7 +23,7 @@ export default Ember.Component.extend({
   },
 
   drop: function(event){
-    var file;
+    // var file;
 
     event.preventDefault();
     this.set('isDragging', false);

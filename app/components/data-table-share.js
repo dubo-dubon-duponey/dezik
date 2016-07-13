@@ -1,3 +1,4 @@
+/* global $:false */
 import Ember from 'ember';
 const { Component } = Ember;
 

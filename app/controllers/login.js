@@ -3,41 +3,39 @@ const { computed, observer } = Ember;
 
 // Model is passed on in "model" by route
 export default Ember.Controller.extend({
-  kevinspacey: Ember.inject.service('tsygan@spacedog'),
+  spaceydomain: Ember.inject.service('tsygan@domain'),
+  spaceydog: Ember.inject.service('tsygan@spacedog'),
   previousTransition: '',
 
   user: '',
   password: '',
   domain: '',
 
-  pending: computed('kevinspacey.pending', function(){
-    return this.get('kevinspacey.pending');
+  pending: computed('spaceydog.pending', function(){
+    return this.get('spaceydog.pending');
   }),
 
-  error: computed('kevinspacey.error', function(){
-    if(!this.get('kevinspacey.error'))
+  error: computed('spaceydog.error', function(){
+    if (!this.get('spaceydog.error'))
       return;
     this.set('password', '');
-    switch (this.get('kevinspacey.error')){
+    switch (this.get('spaceydog.error')){
       case 401:
         return 'Invalid credentials';
-        break;
       case 500:
         return 'SpaceDog is tits-up!';
-        break;
       default:
-        return 'Unknown error ' + this.get('kevinspacey.error');
-        break;
+        return 'Unknown error ' + this.get('spaceydog.error');
     }
   }),
 
-  triggerState: computed('kevinspacey.pending', function(){
-    return this.get('kevinspacey.pending') ? 'loading' : 'reset';
+  triggerState: computed('spaceydog.pending', function(){
+    return this.get('spaceydog.pending') ? 'loading' : 'reset';
   }),
 
-  changeObserver: observer('kevinspacey.verified', function () {
-    var verified = this.get('kevinspacey.verified');
-    if(verified){
+  changeObserver: observer('spaceydog.verified', function () {
+    var verified = this.get('spaceydog.verified');
+    if (verified){
       var previousTransition = this.get('previousTransition');
       if (previousTransition) {
         this.set('previousTransition', '');
@@ -49,12 +47,12 @@ export default Ember.Controller.extend({
 
   actions: {
     signIn: function () {
-      this.set('kevinspacey.password', this.get('password'));
-      this.set('kevinspacey.user', this.get('user'));
-      this.set('kevinspacey.domain', this.get('domain'));
+      this.set('spaceydog.password', this.get('password'));
+      this.set('spaceydog.user', this.get('user'));
+      this.set('spaceydomain.domain', this.get('domain'));
 
-      console.warn(this.get('kevinspacey.login'));
-      this.get('kevinspacey').login();
+      console.warn(this.get('spaceydog.login'));
+      this.get('spaceydog').login();
     }
   }
 });

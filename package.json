@@ -20,6 +20,7 @@
   "license": "MIT",
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.2",
+    "closerkit": "git+https://github.com/dubo-dubon-duponey/closerkit.git",
     "ember-ajax": "^2.0.1",
     "ember-cli": "2.6.1",
     "ember-cli-app-version": "^1.0.0",
@@ -38,8 +39,8 @@
     "ember-load-initializers": "^0.5.1",
     "ember-resolver": "^2.0.3",
     "emberx-select": "2.1.2",
+    "eslint": "^3.0.1",
     "loader.js": "^4.0.1",
-    "tsygan": "git+https://github.com/dubo-dubon-duponey/tsygan.git",
-    "closerkit": "git+https://github.com/dubo-dubon-duponey/closerkit.git"
+    "tsygan": "git+https://github.com/dubo-dubon-duponey/tsygan.git"
   }
 }

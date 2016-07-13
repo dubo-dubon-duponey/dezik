@@ -7,7 +7,8 @@ module.exports = function(defaults) {
     // Add options here
     /*datatables: {
       core: true,
-        style: 'bs', // false, 'dt', 'bs', 'jqui', or 'zf' for styling (none, datatables, bootstrap, jqueryui, or foundation css)
+        style: 'bs', // false, 'dt', 'bs', 'jqui', or 'zf' for styling (none, datatables, bootstrap, jqueryui,
+         // or foundation css)
         extensions: [
         { name: 'autofill', style: false },
         { name: 'buttons', extensions: ['colVis','flash','html5','print'] },

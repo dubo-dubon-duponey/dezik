@@ -1,3 +1,4 @@
+/* global $:false, UAParser:false, moment:false */
 import Ember from 'ember';
 
 var x = 0;

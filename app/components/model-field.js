@@ -3,18 +3,16 @@ import Ember from 'ember';
 const { Component, observer } = Ember;
 
 import Constants from 'tsygan/constants';
-const { types, languages } = Constants;
+const { languages } = Constants;
 
 export default Component.extend({
-  typeOptions: Object.keys(types).map(function(key){
-    return key;
-  }),
   languageOptions: Object.keys(languages).map(function(key){
     return key;
   }),
   modelList: null,
   field: null,
-  changeObserver: observer('field.name', 'field.type', 'field.array', 'field.language', 'field.required', 'field.defaultValue', 'field.enumSet', 'field.relatedTo', function () {
+  changeObserver: observer('field.name', 'field.type', 'field.array', 'field.language', 'field.required',
+    'field.defaultValue', 'field.enumSet', 'field.relatedTo', function () {
     this.sendAction('update', this.get('field.parentModel.id'));
   }),
 
@@ -27,9 +25,9 @@ export default Component.extend({
       field.destroyRecord();
 
       // have to iterate through the fields to delete the correct field from the hasMany relationship
-      fields.forEach(function (field) {
-        if (!field || field.get('id') === removedId) {
-          fields.removeObject(field);
+      fields.forEach(function(item) {
+        if (!item || item.get('id') === removedId) {
+          fields.removeObject(item);
         }
       });
 

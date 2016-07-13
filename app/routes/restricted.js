@@ -2,21 +2,21 @@ import Ember from 'ember';
 const {observer} = Ember;
 
 export default Ember.Route.extend({
-  kevinspacey: Ember.inject.service('tsygan@spacedog'),
+  spaceydog: Ember.inject.service('tsygan@spacedog'),
 
-  changeObserver: observer('kevinspacey.verified', function(){
-    if(!this.get('kevinspacey.verified'))
+  // If we notice a logout, move out to login
+  changeObserver: observer('spaceydog.verified', function(){
+    if (!this.get('spaceydog.verified'))
       this.transitionTo('login');
   }),
 
+  // Restricted route. If we are not verified, move away to login
   beforeModel: function(transition) {
-    // No id? Need to go authenticate.
-    if(!this.get('kevinspacey.verified')){
-      // Tag along
-      var loginController = this.controllerFor('login');
-      loginController.set('previousTransition', transition);
-      this.transitionTo('login');
-    }
-    // Ok, good to go, let's have the user in
+    if (this.get('spaceydog.verified'))
+      return;
+    // No id? Need to go authenticate first.
+    var loginController = this.controllerFor('login');
+    loginController.set('previousTransition', transition);
+    this.transitionTo('login');
   }
 });

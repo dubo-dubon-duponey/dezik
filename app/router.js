@@ -6,13 +6,18 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-  this.route('schema');
-  this.route('data', { path: '/data/:data_schema' });
+  // Home
   this.route('index', {path: '/'});
+  // Logs
   this.route('audit');
+  // Schema editor
+  this.route('schema');
+  // Shares editor
   this.route('share');
-  this.route('restricted');
+  // Login
   this.route('login');
+  // Data management
+  this.route('data', { path: '/data/:data_schema' });
 });
 
 export default Router;

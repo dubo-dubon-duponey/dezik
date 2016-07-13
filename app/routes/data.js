@@ -1,7 +1,7 @@
 import Restricted from './restricted';
 
 export default Restricted.extend({
-  model(params) {
+  model: function(params) {
     return this.store.findAll(params.data_schema);
   }
 });

@@ -2,14 +2,47 @@
 
 <div class="row">
     <div class="col-md-12" title="Drag & drop your files here...">
-      {{#file-uploader fileInputChanged="receiveFile"}}
-      {{/file-uploader}}
+      {{#dk-file-uploader dropped="receiveFile"}}{{/dk-file-uploader}}
     </div>
 </div>
 
 <div class="container-inner">
-  {{outlet}}
-  {{#data-table-share model=model _hook=_table}}{{/data-table-share}}
+  {{#ck-data-table model=model}}
+      <thead>
+      <tr>
+          <th>Filename</th>
+          <th>Last modified</th>
+          <th style="display:none;">Content-type</th>
+          <th style="display: none;">ETAG</th>
+          <th>Size</th>
+          <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each model as |item|}}
+          <tr id="share-id-{{item.short}}">
+            <td>
+              {{#if item.short}}
+                  <a target="_blank" href="{{item.path}}">{{item.filename}}</a>
+              {{/if}}
+              {{#unless item.short}}
+                {{ck-icon icon="arrow-up"}}{{item.filename}}
+              {{/unless}}
+            </td>
+              <td title="{{item.lastModified}}" data-order={{moment item.lastModified 'valueOf'}}>{{moment item.lastModified 'fromNow'}}</td>
+              <td style="display: none;">{{item.contentType}}</td>
+              <td style="display: none;">{{item.etag}}</td>
+              <td data-order={{item.size}}>{{size item.size}}</td>
+              <td>
+                {{#if item.short}}
+                  {{#ck-button disabled=item.isDeleted size="small" type="danger" action=(action "deleteRow" item)}}Delete{{/ck-button}}
+                {{/if}}
+              </td>
+          </tr>
+      {{/each}}
+      </tbody>
+
+  {{/ck-data-table}}
 </div>
 
 

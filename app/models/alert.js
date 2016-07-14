@@ -6,5 +6,5 @@ export default Model.extend({
   type: attr('string', {defaultValue: 'danger'}),
   title: attr('string'),
   message: attr('string'),
-  destruct: attr('number', {defaultValue: 5})
+  destructIn: attr('number', {defaultValue: 5})
 });

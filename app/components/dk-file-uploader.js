@@ -23,16 +23,11 @@ export default Ember.Component.extend({
   },
 
   drop: function(event){
-    // var file;
-
     event.preventDefault();
     this.set('isDragging', false);
 
-    // only 1 file for now
-
     var src = event.dataTransfer.files;
-
     for (var x = 0; x < src.length; x++)
-      this.sendAction('fileInputChanged', src[x]);
+      this.sendAction('dropped', src[x]);
   }
 });

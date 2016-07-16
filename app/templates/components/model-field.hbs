@@ -5,8 +5,9 @@
 
 <div class='col-sm-2'>
     <span class="label label-info">Type</span>
-  {{#x-select value=field.type disabled=(if field.dirty "" "disabled") class='form-control' prompt='Attribute Type'}}
-    {{#each typeOptions as |option|}}
+  {{log field.typeOptions.length}}
+  {{#x-select value=field.type disabled=(if (eq field.typeOptions.length 1) "disabled" "") class='form-control' prompt='Attribute Type'}}
+    {{#each field.typeOptions as |option|}}
       {{#x-option value=option}}{{option}}{{/x-option}}
     {{/each}}
   {{/x-select}}
@@ -21,11 +22,27 @@
       {{/each}}
     {{/x-select}}
   {{/if}}
-  {{#if field.hasRelation}}
-      <!--
-  {{input type='text' value=field.relatedTo placeholder='Model Name' class='form-control'}}
--->
+  {{#if field.hasBoundaries}}
+      <span class="label label-info">&gt;</span>
+    {{input type='text' value=field.gt placeholder='0' class='form-control'}}
+      <span class="label label-info">&gt;=</span>
+    {{input type='text' value=field.gte placeholder='0' class='form-control'}}
+      <span class="label label-info">&lt;</span>
+    {{input type='text' value=field.lt placeholder='0' class='form-control'}}
+      <span class="label label-info">&lt;=</span>
+    {{input type='text' value=field.lte placeholder='0' class='form-control'}}
+      <span class="label label-info">step</span>
+    {{input type='text' value=field.step placeholder='0' class='form-control'}}
+  {{/if}}
 
+{{#unless field.hasRelation}}
+  {{#unless field.hasBoundaries}}
+      <span class="label label-info">pattern</span>
+    {{input type='text' value=field.pattern placeholder='regexp' class='form-control'}}
+  {{/unless}}
+{{/unless}}
+
+  {{#if field.hasRelation}}
       <span class="label label-info">Linked-type</span>
     {{#x-select value=field.relatedTo class='form-control' prompt='Relation'}}
       {{#each modelList as |option|}}
@@ -41,7 +58,9 @@
 
 
 <div class='col-sm-1'>
-    <span class={{if field.hasArray "label label-info" "label label-default"}}>Array</span><br />{{input disabled=(if field.hasArray "" "disabled") type="checkbox" name="array" checked=(if field.hasArray field.array "")}}
+{{#if field.hasArray}}
+    <span class="label label-info">Array</span><br />{{input type="checkbox" name="array" checked=field.array}}
+{{/if}}
 </div>
 
 <div class='col-sm-1'>

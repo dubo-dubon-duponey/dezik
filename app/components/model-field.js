@@ -19,8 +19,8 @@ export default Component.extend({
     'field.language',
     'field.lt', 'field.lte', 'field.gt', 'field.gte', 'field.step',
     function () {
-    this.sendAction('update', this.get('field.parentModel.id'));
-  }),
+      this.sendAction('update', this.get('field.parentModel.id'));
+    }),
 
   actions: {
     removeField(field) {

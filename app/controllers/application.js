@@ -3,6 +3,7 @@ const {computed} = Ember;
 
 export default Ember.Controller.extend({
   spaceydog: Ember.inject.service('tsygan@spacedog'),
+
   loggedIn: computed('spaceydog.ready', function(){
     return this.get('spaceydog.ready');
   }),

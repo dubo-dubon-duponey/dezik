@@ -1,78 +1,132 @@
-<div class='col-sm-2'>
-    <span class="label label-info">Name</span>
-  {{input type='text' value=field.name disabled=(if field.dirty "" "disabled") placeholder='Attribute Name' class='form-control'}}
+<!-- Name -->
+<div class='col-sm-3'>
+    <div class="form-group {{if field.sealed "has-success"}} has-feedback">
+        <div class="input-group">
+            <span class="input-group-addon">{{ck-icon icon="font"}}</span>
+          {{input type='text' value=field.name disabled=(if field.sealed "disabled" "") placeholder='Name' class='form-control'}}
+        </div>
+    </div>
 </div>
 
-<div class='col-sm-2'>
-    <span class="label label-info">Type</span>
-  {{log field.typeOptions.length}}
-  {{#x-select value=field.type disabled=(if (eq field.typeOptions.length 1) "disabled" "") class='form-control' prompt='Attribute Type'}}
-    {{#each field.typeOptions as |option|}}
-      {{#x-option value=option}}{{option}}{{/x-option}}
-    {{/each}}
-  {{/x-select}}
+<!-- Type, possibly as an array -->
+<div class='col-sm-3'>
+    <div class="form-group {{if field.sealed "my-has-success"}}">
+        <div class="input-group">
+            <span class="input-group-addon">type</span>
+          {{#x-select value=field.type disabled=(if (eq field.typeOptions.length 1) "disabled" "") class='form-control' prompt='Type'}}
+            {{#each field.typeOptions as |option|}}
+              {{#x-option value=option}}{{option}}{{/x-option}}
+            {{/each}}
+          {{/x-select}}
+          {{#if field.hasArray}}
+              <span class="input-group-addon">[ ]</span>
+              <span class="input-group-addon">
+              {{input type="checkbox" name="array" checked=field.array}}
+            </span>
+          {{/if}}
+        </div>
+    </div>
 </div>
 
+<!-- Per-type specialties -->
 <div class='col-sm-2'>
   {{#if field.hasLanguage}}
-      <span class="label label-info">Lang</span>
-    {{#x-select value=field.language disabled=(if field.dirty "" "disabled") class='form-control' prompt='Language'}}
-      {{#each languageOptions as |option|}}
-        {{#x-option value=option}}{{option}}{{/x-option}}
-      {{/each}}
-    {{/x-select}}
-  {{/if}}
-  {{#if field.hasBoundaries}}
-      <span class="label label-info">&gt;</span>
-    {{input type='text' value=field.gt placeholder='0' class='form-control'}}
-      <span class="label label-info">&gt;=</span>
-    {{input type='text' value=field.gte placeholder='0' class='form-control'}}
-      <span class="label label-info">&lt;</span>
-    {{input type='text' value=field.lt placeholder='0' class='form-control'}}
-      <span class="label label-info">&lt;=</span>
-    {{input type='text' value=field.lte placeholder='0' class='form-control'}}
-      <span class="label label-info">step</span>
-    {{input type='text' value=field.step placeholder='0' class='form-control'}}
+      <div class="form-group">
+          <div class="input-group">
+              <span class="input-group-addon">lang</span>
+            {{#x-select value=field.language disabled=(if field.sealed "disabled" "") class='form-control' prompt='Language'}}
+              {{#each languageOptions as |option|}}
+                {{#x-option value=option}}{{option}}{{/x-option}}
+              {{/each}}
+            {{/x-select}}
+          </div>
+      </div>
   {{/if}}
 
-{{#unless field.hasRelation}}
-  {{#unless field.hasBoundaries}}
-      <span class="label label-info">pattern</span>
-    {{input type='text' value=field.pattern placeholder='regexp' class='form-control'}}
-  {{/unless}}
-{{/unless}}
+  {{#if field.hasPattern}}
+      <div class="form-group">
+          <div class="input-group">
+              <span class="input-group-addon">pattern</span>
+            {{input type='text' value=field.pattern placeholder='regexp' class='form-control'}}
+          </div>
+      </div>
+  {{/if}}
+
+  {{#if field.hasBoundaries}}
+  <div class="form-group">
+      <div class="input-group">
+          <span class="input-group-addon">&gt;&nbsp;</span>
+        {{input type='text' value=field.gt placeholder='-∞' class='form-control'}}
+      </div>
+      <div class="input-group">
+          <span class="input-group-addon">&gt;=</span>
+        {{input type='text' value=field.gte placeholder='-∞' class='form-control'}}
+      </div>
+      <div class="input-group">
+          <span class="input-group-addon">&lt;&nbsp;</span>
+        {{input type='text' value=field.lt placeholder='∞' class='form-control'}}
+      </div>
+      <div class="input-group">
+          <span class="input-group-addon">&lt;=</span>
+        {{input type='text' value=field.lte placeholder='∞' class='form-control'}}
+      </div>
+      <div class="input-group">
+          <span class="input-group-addon">step</span>
+        {{input type='text' disabled=(if field.gte "" "disabled") value=(if field.gte field.step "") placeholder='0' class='form-control'}}
+      </div>
+  </div>
+  {{/if}}
 
   {{#if field.hasRelation}}
-      <span class="label label-info">Linked-type</span>
-    {{#x-select value=field.relatedTo class='form-control' prompt='Relation'}}
-      {{#each modelList as |option|}}
-        {{#x-option value=option}}{{option}}{{/x-option}}
-      {{/each}}
-    {{/x-select}}
+  <div class="form-group">
+      <div class="input-group">
+          <span class="input-group-addon">link</span>
+        {{#x-select value=field.relatedTo class='form-control' prompt='Relation'}}
+          {{#each modelList as |option|}}
+            {{#x-option value=option}}{{option}}{{/x-option}}
+          {{/each}}
+        {{/x-select}}
+      </div>
+  </div>
   {{/if}}
 
   {{#if field.hasEnum}}
-      <span class="label label-info">Enum values</span>{{input type='text' value=field.fieldEnumSet placeholder='Enum values' class='form-control'}}
+      <div class="form-group">
+          <div class="input-group">
+              <span class="input-group-addon">enum</span>
+            {{input type='text' value=field.fieldEnumSet placeholder='1,2,a,foo' class='form-control'}}
+          </div>
+      </div>
   {{/if}}
 </div>
 
 
-<div class='col-sm-1'>
-{{#if field.hasArray}}
-    <span class="label label-info">Array</span><br />{{input type="checkbox" name="array" checked=field.array}}
-{{/if}}
+<div class='col-sm-3'>
+    <div class="form-group">
+        <div class="input-group">
+            <span class="input-group-addon">
+                required
+            </span>
+            <span class="input-group-addon">
+              {{input type="checkbox" name="required" checked=field.required}}
+            </span>
+            {{input type='text' disabled=(if field.required "" "disabled") value=(if field.required field.defaultValue '') placeholder='Optional default' class='form-control'}}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="input-group">
+            <span class="input-group-addon">
+                examples
+            </span>
+            {{input type="text" placeholder="example 1,example 2" checked=field.examples class='form-control'}}
+        </div>
+    </div>
 </div>
 
-<div class='col-sm-1'>
-    <span class="label label-info">Required</span><br />{{input type="checkbox" name="required" checked=field.required}}
-</div>
 
-<div class='col-sm-2'>
-    <span class={{if field.required "label label-info" "label label-default"}}>Default</span>{{input type='text' disabled=(if field.required "" "disabled") value=(if field.required field.defaultValue '') placeholder='Default value' class='form-control'}}
-</div>
-
-<div class=":col-sm-1 {{unless field.hasRelation 'col-sm-offset-4'}}">
-  {{#if field.dirty}}
+<div class="col-sm-1">
+  {{#unless field.sealed}}
       <button type='button' {{action 'removeField' field}} class='btn btn-xs btn-danger pull-right'><span>Delete</span></button>
-  {{/if}}
+  {{/unless}}
 </div>

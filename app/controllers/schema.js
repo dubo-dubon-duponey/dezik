@@ -75,13 +75,15 @@ export default Controller.extend({
     },
 
     saveModel(model) {
-      model.save();
       model.set('dirty', false);
       const fields = model.get('fields');
       // iterate through fields and delete those records
       fields.forEach((field) => {
+        // Seal it
+        field.seal();
         field.set('dirty', false);
       });
+      model.save();
     },
 
     // Triggered when fields are updated - change the state to not saved

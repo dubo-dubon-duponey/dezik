@@ -5,7 +5,7 @@ export default Ember.Route.extend({
 
   // The login route: if we are all verified, move to index
   beforeModel: function() {
-    if (!this.get('spaceydog.verified'))
+    if (!this.get('spaceydog.ready'))
       return;
 
     this.transitionTo('index');

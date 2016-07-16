@@ -1,1 +1,14 @@
-{{outlet}}
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-4">
+          {{#link-to "audit"}}<img src="images/logs.png" title="Logs"/>{{/link-to}}
+        </div>
+        <div class="col-md-4">
+          {{#link-to "schema"}}<img src="images/schemas.png" title="Schema Editor"/>{{/link-to}}
+        </div>
+        <div class="col-md-4">
+          {{#link-to "share"}}<img src="images/shares.png" title="Shares Manager"/>{{/link-to}}
+        </div>
+      {{outlet}}
+    </div>
+</div>

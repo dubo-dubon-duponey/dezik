@@ -17,14 +17,16 @@ Layout the top level navigation here?
         <div class="navbar-collapse collapse" id="navbar-collapse-main">
 
             <ul class="nav navbar-nav hidden-xs">
-                <div id="foo" style="display: none;">
-                  {{#ck-button type="info" isVisible=loggedOut action="login"}}Log in{{/ck-button}}
-                  {{#ck-button type="danger" isVisible=loggedIn action="logout"}}Log out{{/ck-button}}
-                </div>
                 <li>
-                  {{#ck-popover tagName="button" classNames="btn btn-default navbar-btn navbar-btn-avitar"
-                                html=true contentFrom="#foo"}}
-                      <img class="img-circle" src="images/avatar.png">
+                  {{#ck-popover html=true contentFrom="#logon-pop"}}
+                    {{#ck-button type="default" class="navbar-btn navbar-btn-avitar"}}
+                          <img class="img-circle" src="images/avatar.png">
+                    {{/ck-button}}
+                      <div id="logon-pop" style="display: none;">
+                          {{foobar}}
+                        {{#ck-button type="info" size="small" isVisible=loggedOut action="login"}}Log in{{/ck-button}}
+                        {{#ck-button type="danger" size="small" isVisible=loggedIn action="logout"}}Log out{{/ck-button}}
+                      </div>
                   {{/ck-popover}}
                 </li>
                 <li>
@@ -36,20 +38,25 @@ Layout the top level navigation here?
                 <li>
                   {{#link-to "audit"}}Logs{{/link-to}}
                 </li>
+                <!--
+                <li>
+                  {{#link-to "users"}}Users{{/link-to}}
+                </li>
                 <li>
                   {{#link-to "data"}}Data inspector{{/link-to}}
                 </li>
+                -->
             </ul>
 
-          <!--
-            <ul class="nav navbar-nav navbar-right m-r-0 hidden-xs">
-                <li>
-                    <a class="app-notifications" href="notifications/index.html">
-                        <span class="icon icon-bell"></span>
-                    </a>
-                </li>
-            </ul>
-          -->
+            <!--
+              <ul class="nav navbar-nav navbar-right m-r-0 hidden-xs">
+                  <li>
+                      <a class="app-notifications" href="notifications/index.html">
+                      {{ck-icon icon="bell"}}
+                      </a>
+                  </li>
+              </ul>
+            -->
 
             <form class="navbar-form navbar-right app-search" role="search">
                 <div class="form-group">
@@ -77,9 +84,9 @@ Layout the top level navigation here?
 
 <div class="container m-t-lg">
     <div class="container">
-        {{outlet}}
+      {{outlet}}
     </div>
 </div>
 
 <!-- Alert panel -->
-{{ck-growl max=10}}
+{{ck-growl model=alerts max=10}}

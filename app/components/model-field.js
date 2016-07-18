@@ -18,6 +18,7 @@ export default Component.extend({
     'field.relatedTo',
     'field.language',
     'field.lt', 'field.lte', 'field.gt', 'field.gte', 'field.step',
+    'field.examples',
     function () {
       this.sendAction('update', this.get('field.parentModel.id'));
     }),
